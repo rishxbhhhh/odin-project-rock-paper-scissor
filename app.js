@@ -1,5 +1,15 @@
+const btnrock = document.querySelector("#btn-rock");
+const btnpaper = document.querySelector("#btn-paper");
+const btnscissors = document.querySelector("#btn-scissors");
+const player = document.querySelector("#player-points");
+const computer = document.querySelector("#computer-points");
+const btnresult = document.querySelector("#show-result");
+const resultField = document.querySelector("#Result");
+const gameOutput = document.querySelector('#game-output');
+
 const choices = [`rock`, `paper`, `scissors`];
-var playerPoints=0,computerPoints=0;
+var playerPoints = 0,
+  computerPoints = 0;
 function computerPlay() {
   // console.log(Math.floor(Math.random(3)*3));
   // console.log(choices[Math.floor(Math.random(3)*3)]);
@@ -10,51 +20,66 @@ function playRound(playerSelection, computerSelection) {
   let win = false;
   const ps = playerSelection.toLowerCase();
   const cs = computerSelection.toLowerCase();
-  console.log(ps + " -- " + cs);
+  let output = ps + " -- " + cs + "<br>";
   if (ps === `rock` && cs === `scissors`) {
-    console.log(`You Win! Rock beats Scissors`);
+    output+=`You Win! Rock beats Scissors`;
     playerPoints++;
-  }
-  else if (ps === `scissors` && cs === `paper`) {
-    console.log(`You Win! Scissors beats Paper`);
+  } else if (ps === `scissors` && cs === `paper`) {
+    output+=`You Win! Scissors beats Paper`;
     playerPoints++;
-  }
-  else if (ps === `paper` && cs === `rock`) {
-    console.log(`You Win! Paper beats Rock`);
+  } else if (ps === `paper` && cs === `rock`) {
+    output+=`You Win! Paper beats Rock`;
     playerPoints++;
-  }
-  else if (cs === `rock` && ps === `scissors`) {
-    console.log(`You Lose! Rock beats Scissors`);
+  } else if (cs === `rock` && ps === `scissors`) {
+    output+=`You Lose! Rock beats Scissors`;
     computerPoints++;
-  }
-  else if (cs === `scissors` && ps === `paper`) {
-    console.log(`You Lose! Scissors beats Paper`);
+  } else if (cs === `scissors` && ps === `paper`) {
+    output+=`You Lose! Scissors beats Paper`;
     computerPoints++;
-  }
-  else if (cs === `paper` && ps === `rock`) {
-    console.log(`You Lose! Paper beats Rock`);
+  } else if (cs === `paper` && ps === `rock`) {
+    output+=`You Lose! Paper beats Rock`;
     computerPoints++;
+  } else if (cs === ps) {
+    output+=`Its a tie! You both had ` + cs;
   }
-  else if (cs === ps) {
-    console.log(`Its a tie! You both had ` + cs);
-  }
+  gameOutput.innerHTML = output;
 }
 
-function game() {
-playerPoints=0,computerPoints=0;
+var playerSelection = null;
 
-  for (let i = 0; i < 5; i++) {
-    const playerSelection = prompt(`Player selection? `);
-    const computerSelection = computerPlay();
-    playRound(playerSelection, computerSelection);
+function setPaper() {
+  playerSelection = "paper";
+  game();
+}
+function setRock() {
+  playerSelection = "rock";
+  game();
+}
+function setScissors() {
+  playerSelection = "scissors";
+  game();
+}
+
+btnrock.addEventListener("click", setRock);
+btnpaper.addEventListener("click", setPaper);
+btnscissors.addEventListener("click", setScissors);
+btnresult.addEventListener("click", showResults);
+
+function game() {
+  // (playerPoints = 0), (computerPoints = 0); reset points
+  const computerSelection = computerPlay();
+  playRound(playerSelection, computerSelection);
+  player.innerHTML = playerPoints;
+  computer.innerHTML = computerPoints;
+}
+function showResults() {
+  let output = null;
+  if (playerPoints > computerPoints) {
+    output = `Player Won by ` + (playerPoints - computerPoints) + ` points.`;
+  } else if (playerPoints === computerPoints) {
+    output = `\nMatch tied! with ` + playerPoints + ` points.`;
+  } else {
+    output = `Player Lost by ` + (computerPoints - playerPoints) + ` points.`;
   }
-  if(playerPoints>computerPoints){
-      console.log(`Player Won by ` + (playerPoints-computerPoints) + ` points.`);
-  }
-  else if(playerPoints===computerPoints){
-      console.log(`\nMatch tied! with ` + playerPoints + ` points.`);
-  }
-  else{
-    console.log(`Player Lost by ` + (computerPoints-playerPoints) + ` points.`);
-  }
+  resultField.innerHTML = output;
 }
